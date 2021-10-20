@@ -1,3 +1,4 @@
+// Definindo o comportamento do visor
 var visor = document.getElementById('visor')
 
 visor.onkeydown = (e) => { 
@@ -7,8 +8,6 @@ visor.onkeydown = (e) => {
 }
 
 // Definindo os eventos dos botões de número
-var elementosNumero = document.getElementsByClassName('numero')
-
 function atribuirEventoElementosNumero(elementos) {
     Array.from(elementos).forEach(elemento => {
         elemento.addEventListener('click', () => {
@@ -19,14 +18,16 @@ function atribuirEventoElementosNumero(elementos) {
     });
 }
 
+var elementosNumero = document.getElementsByClassName('numero')
 atribuirEventoElementosNumero(elementosNumero)
 
 
 // Definindo o evento do botão de limpar
 document.getElementById('limpar').addEventListener('click', () => {
     visor.value = '0'
-    hasPonto    = false
-    hasOperador = false
+    hasPonto = false
+    operador = ''
+    primeiroValor = ''
 })
 
 // Definindo o evento do botão de ponto (.)
@@ -38,14 +39,51 @@ document.getElementById('ponto').addEventListener('click', () => {
 })
 
 // Definindo o evento dos botões de operação
-var hasOperador       = false
-var elementosOperador = document.getElementsByClassName('operador')
+var operador = ''
+var primeiroValor = ''
+var segundoValor = ''
 
 function atribuirEventoElementosOperador(elementos) {
     Array.from(elementos).forEach(elemento => {
         elemento.addEventListener('click', () => {
-            let operador = elemento.value
-
+            operador = elemento.value
+            primeiroValor = visor.value
+            visor.value = '0'
         })
     })
 }
+
+var elementosOperador = document.getElementsByClassName('operador')
+atribuirEventoElementosOperador(elementosOperador)
+
+// Definindo o evento do botão de igual (=)
+var resultado = ''
+
+document.getElementById('igual').addEventListener('click', () => {
+    if (operador.length === 0) { return false }
+
+    segundoValor  = visor.value
+
+    switch (operador) {
+        case '+': 
+            resultado = primeiroValor + segundoValor 
+            break
+        
+        case '-':
+            resultado = primeiroValor - segundoValor 
+            break
+        
+        case '*':
+            resultado = primeiroValor * segundoValor 
+            break
+        
+        case '/':
+            resultado = primeiroValor / segundoValor 
+            break
+    }
+
+    primeiroValor = ''
+    segundoValor = ''
+
+    visor.value = resultado
+})
